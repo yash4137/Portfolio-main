@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
+import emailjs from "@emailjs/browser";
 
 import { styles } from "../styles";
 import EarthCanvas from "./canvas/Earth";
@@ -29,16 +30,36 @@ const Contact = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate sending email
-    setTimeout(() => {
-      setLoading(false);
-      alert("Thank you. I will get back to you as soon as possible.");
-      setForm({
-        name: "",
-        email: "",
-        message: "",
-      });
-    }, 1500);
+    // Note: You will need to sign up for EmailJS (https://www.emailjs.com/)
+    // and replace the 'YOUR_*' strings below with your actual credentials.
+    emailjs
+      .send(
+        "service_kgglwnb", // Replace with your EmailJS Service ID
+        "template_io7fdsu", // Replace with your EmailJS Template ID
+        {
+          from_name: form.name,
+          name: form.name,
+          email: form.email,
+          message: form.message,
+        },
+        "2-KSijnODvkPz_Da0" // Replace with your EmailJS Public Key
+      )
+      .then(
+        () => {
+          setLoading(false);
+          alert("Thank you. I will get back to you as soon as possible.");
+          setForm({
+            name: "",
+            email: "",
+            message: "",
+          });
+        },
+        (error) => {
+          setLoading(false);
+          console.error(error);
+          alert("Ahh, something went wrong. Please try again.");
+        }
+      );
   };
 
   return (
